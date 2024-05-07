@@ -4,18 +4,15 @@
 #include <ctime>   // do funkcji time()
 using namespace std;
 
-
-
-
-
 class Pole
 {
 protected:
-    string nazwaPola;
+    
     int kosztZakupu;
     bool aktWlasnosci;
 
 public:
+string nazwaPola;
     string zwrocNazwe(){
         return nazwaPola;
     }
@@ -24,6 +21,12 @@ public:
         return kosztZakupu;
     }
 
+};
+class Infrastruktura
+{
+    string gracz=" ";
+    int oplataPostoj;
+    bool wykupione;
 };
 class Nieruchomosc : public Pole
 {
@@ -48,13 +51,7 @@ void wyswietl(){
     cout << "gracz: " << this->gracz<<endl;
     cout << "Oplata: " << this->oplataPostoj<<endl;
 }
-void nazwaPol(string nazwa){
-    nazwaPola = nazwa;
-};
 
-void cenaKupna(int cena){
-    kosztZakupu = cena;
-};
 void dodajDom(){
     int choice;
     cout << "jesli chcesz dodac dom wcisnij 2";
@@ -100,7 +97,7 @@ void oplataPostoj(){
 }
 
 };
-class szansa : public Pole
+class szansa 
 {
 public:
     bool nagroda;
@@ -108,14 +105,18 @@ public:
     string nazwa;
     szansa(bool n, int p, string na): nagroda(n), prize(p),nazwa(na){};
 void wyswietl(){
+
     cout << "Nagroda: " << this->nagroda<<endl;
     cout << "Nazwa: " << this->nazwa<<endl;
 
 }
-void nazwaPol(string nazwa){
-    nazwaPola = nazwa;
-};
 
+
+void prizeOrLost(){
+    int chance = rand()%2+1;
+    if(chance%2) prize = rand()%100;
+    else prize = rand()%100-100;
+}
 
 
 };
@@ -185,10 +186,10 @@ class gracz
     int sprawdzOplate( vector<Nieruchomosc>& nieruchomosci,vector<gracz> listaGraczy){
         Nieruchomosc element = nieruchomosci[pozycjaPlansza];
         if(element.wykupione == true){
-            kapital -=element.oplataPostoj;
+            kapital -=element.oplataPostoj+(element.domki*element.oplataPostoj);
             if(kapital <=0) return 0;
            for(const auto& osoba : listaGraczy){
-            if(osoba.imie == element.gracz) kapital += element.oplataPostoj;
+            if(osoba.imie == element.gracz) kapital += element.oplataPostoj+(element.domki*element.oplataPostoj);
 
         }
         
@@ -196,8 +197,22 @@ class gracz
     } 
         return element.oplataPostoj;
     }
-};
 
+    void aktualnePole(vector<Nieruchomosc>& nieruchomosci){
+        Nieruchomosc aktualnieStoje = nieruchomosci[pozycjaPlansza];
+        cout << "Pole: " << aktualnieStoje.nazwaPola<<endl;
+    };
+};
+class Bankier
+{
+    public:
+    
+    void Sprzedaz(){};
+    void Kupno(){};
+    private:
+
+
+};
 void dodajGracza(vector<gracz>&listaGraczy){
     string imie;
     int kapital = 200;
@@ -243,8 +258,9 @@ void test( vector<gracz>& listaGraczy,vector<Nieruchomosc>& nieruchomosci ){
     for( auto& osoba : listaGraczy){
     int choice;
     cout << "___________________________";
-    cout << "Wyrzucono oczek: "<<osoba.rzutKostka() << endl;
-    cout << "Twoja aktualna pozycja to :"<< osoba.planszaPozycja(nieruchomosci,listaGraczy)<<endl;
+    cout << "Wyrzucono oczek: "<<osoba.rzutKostka();
+    cout << "  Pozycja :"<< osoba.planszaPozycja(nieruchomosci,listaGraczy)<<endl;
+    osoba.aktualnePole(nieruchomosci);
     cout << "Jesli chcesz kupic nieruchomosc naciśnij 1";
     cin >> choice;
     if(choice == 1) osoba.kupnoNieruchomosci( osoba.aktyWlasnosc, nieruchomosci);
