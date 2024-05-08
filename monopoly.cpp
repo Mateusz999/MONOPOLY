@@ -29,6 +29,40 @@ class Kolej
     int oplataPostoj;
     Kolej(string N, int K, bool W, string G): nazwa(N),kosztZakupy(K),wykupione(W),gracz(G){};
 };
+
+class Szansa
+{
+    public:
+    string nazwa;
+    int prize;
+
+    int chance(){
+        prize = rand()%200-100;
+        return prize;
+    }
+
+    Szansa(int P,string N): prize(P), nazwa(N){};
+};
+
+class DarmowyParking
+{
+    public:
+    string nazwa;
+};
+
+class Wiezienie
+{
+    public:
+    string nazwa;
+
+    string osadzony;
+
+    void changeState(Gracz*gracz){
+        gracz->odsiadka = true;
+
+    };
+    Wiezienie(string N, string osadzony): nazwa(N),osadzony(osadzony){};
+};
 // KLASA OBIEKT INFRASTRUKTURY
 class ObiektInfrastruktury
 {
@@ -38,6 +72,7 @@ class ObiektInfrastruktury
     bool wykupione;
     string gracz;
     int oplataPostoj;
+    
     ObiektInfrastruktury(string N, int K, bool W, string G): nazwa(N),kosztZakupy(K),wykupione(W),gracz(G){};
 };
 // KLASA GRACZ
@@ -45,11 +80,11 @@ class Gracz{
     private:
         int stanKonta;   
     public:
-
+        bool odsiadka;
         string imie;
         int pozycja = 0;
 
-        Gracz(int S, string I, int P): stanKonta(S), imie(I), pozycja(P) {};
+        Gracz(int S, string I, int P, bool OD): stanKonta(S), imie(I), pozycja(P), odsiadka(OD) {};
 
         int rzutKostka(){
             int kostka_1 = rand()%6+1;
@@ -135,8 +170,9 @@ void dodajGracza(vector<Gracz>&listaGraczy){
     string imie;
     int kapital = 200;
     int pozycja=0;
+    bool odsiadka = false;
     cout << "Imie: ";cin >> imie;
-    listaGraczy.push_back(Gracz(kapital,imie,pozycja));
+    listaGraczy.push_back(Gracz(kapital,imie,pozycja, odsiadka));
 };
 
 void wyswietl(const vector<Gracz>&listaGraczy){
@@ -195,7 +231,7 @@ void wyswietl(const vector<Gracz>&listaGraczy){
     void sellFinished(Gracz*sprzedajacy, Gracz*kupujący,auto&nieruchumosci){
         int prize = sprzedajacy.sellPostion(auto&nieruchumosci,Gracz*kupujący);
         sprzedajacy->getKapital(prize);
-        kupuący->getKapital(-prize);
+        kupujący->getKapital(-prize);
     };
 
     void premiaZaStart(Gracz* osoba){

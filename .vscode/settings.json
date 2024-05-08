@@ -2,7 +2,20 @@
   "C_Cpp_Runner.msvcBatchPath": "",
   "files.associations": {
     "ostream": "cpp",
-    "iostream": "cpp"
+    "iostream": "cpp",
+    "atomic": "cpp",
+    "cwchar": "cpp",
+    "string": "cpp",
+    "exception": "cpp",
+    "random": "cpp",
+    "initializer_list": "cpp",
+    "iosfwd": "cpp",
+    "istream": "cpp",
+    "new": "cpp",
+    "stdexcept": "cpp",
+    "streambuf": "cpp",
+    "type_traits": "cpp",
+    "utility": "cpp"
   },
   "C_Cpp_Runner.cCompilerPath": "gcc",
   "C_Cpp_Runner.cppCompilerPath": "g++",
