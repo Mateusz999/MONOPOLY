@@ -1,22 +1,5 @@
 {
   "C_Cpp_Runner.msvcBatchPath": "",
-  "files.associations": {
-    "ostream": "cpp",
-    "iostream": "cpp",
-    "atomic": "cpp",
-    "cwchar": "cpp",
-    "string": "cpp",
-    "exception": "cpp",
-    "random": "cpp",
-    "initializer_list": "cpp",
-    "iosfwd": "cpp",
-    "istream": "cpp",
-    "new": "cpp",
-    "stdexcept": "cpp",
-    "streambuf": "cpp",
-    "type_traits": "cpp",
-    "utility": "cpp"
-  },
   "C_Cpp_Runner.cCompilerPath": "gcc",
   "C_Cpp_Runner.cppCompilerPath": "g++",
   "C_Cpp_Runner.debuggerPath": "gdb",
@@ -72,5 +55,13 @@
   "C_Cpp_Runner.useLeakSanitizer": false,
   "C_Cpp_Runner.showCompilationTime": false,
   "C_Cpp_Runner.useLinkTimeOptimization": false,
-  "C_Cpp_Runner.msvcSecureNoWarnings": false
+  "C_Cpp_Runner.msvcSecureNoWarnings": false,
+  "files.associations": {
+    "ostream": "cpp",
+    "random": "cpp",
+    "limits": "cpp",
+    "chrono": "cpp",
+    "iostream": "cpp",
+    "new": "cpp"
+  }
 }
