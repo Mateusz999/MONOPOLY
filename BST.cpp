@@ -109,7 +109,12 @@ tree* findMin(tree* start) {
 
 
 void searchToDel(tree** start, int value) {
-    if (*start == nullptr) return;
+    if (*start == nullptr){
+        system("cls");
+        cout << "There is no tree"<<endl;
+
+        return;
+    } 
 
     if (value < (*start)->number) {
         searchToDel(&(*start)->left, value);

@@ -238,7 +238,7 @@ void wyswietl(const vector<Gracz>&listaGraczy){
         
               int kapital =200;
                 if(osoba->pozycja  >= 40){
-            int pozycja = osoba->pozycja;
+            
              osoba->afterStartPosition();
              osoba->setKapital(kapital);
             cout << " Kapitał : " << osoba->getKapital()<<endl;
@@ -275,7 +275,7 @@ int main(){
     
     do{
             for( auto& osoba : listaGraczy){
-    int choice;
+    
 
     int rzut = osoba.rzutKostka();
     cout << "Aktualna pozycja: " <<osoba.pozycja << " ---> ";
