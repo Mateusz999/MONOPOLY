@@ -57,18 +57,36 @@ class Gracz
             pozycja += wartosc;
         };
 };
+
 class Pole
 {
     protected:
         string nazwaPola;
-        string wlasciciel="dziala";
-        int oplata=100;
-        bool wykupione=false;
-        int cena=100;
+        
     public: 
         string getNazwaPola(){
             return nazwaPola;
         };
+        void setNazwa(string nazwa){
+            nazwaPola = nazwa;
+        }
+        void virtual obslugaGracza(Gracz& gracz){
+            cout << gracz.getImie()<<endl;
+        };
+     
+};
+
+class Nieruchomosci:public Pole
+{   
+    private:
+        int domki = 3;
+        bool hotel=false;
+        string wlasciciel="dziala";
+        int oplata=100;
+        bool wykupione=false;
+        int cena=100;
+    public:
+
         bool getWykupione(){
             return wykupione;
         };
@@ -90,22 +108,6 @@ class Pole
         int getOplata(){
             return oplata;
         }
-        void virtual obslugaGracza(Gracz& gracz){
-            cout << gracz.getImie()<<endl;
-        };
-        void kupPole(Gracz* gracz){
-            setWlasciciel((*gracz).getImie());
-            setWykupione(true);
-            (*gracz).setStanDown(getCena());
-        }
-};
-class Nieruchomosci:public Pole
-{   
-    private:
-        int domki = 3;
-        bool hotel=false;
-    public:
-
 
         void menuNieruchomosc(){    
             cout << "==================================================="<<endl;
@@ -130,7 +132,6 @@ class Nieruchomosci:public Pole
         void setDomki(){
             domki+=1;
         }
-
         void budujDomek(Gracz* gracz){
             if(getDomki() <=3){
                 setDomki();
@@ -147,6 +148,12 @@ class Nieruchomosci:public Pole
                 } 
             };
         }
+              void kupPole(Gracz *gracz)
+    {
+        setWlasciciel((*gracz).getImie());
+        setWykupione(true);
+        (*gracz).setStanDown(getCena());
+    }
         vector<Gracz>listaGraczy;
         void virtual obslugaGracza(Gracz& gracz) override {
             Gracz* posiadacz;
@@ -189,16 +196,11 @@ class Nieruchomosci:public Pole
 class Bankier
 {
     public:
-    void dajPieniadze(Gracz*gracz, int kwota){
-        gracz->setStanUp(kwota);
-    };
+ 
     void zabierzPieniadze(Gracz*gracz, int kwota){
         gracz->setStanDown(kwota);
-    };
-    void prawoWlasnosci(Gracz*gracz,Pole*pole){
-        pole->setWlasciciel((gracz)->getImie());
-        pole->setWykupione(true);
-    };
+    }; 
+
     void dajDomek(Gracz*gracz,Nieruchomosci*nieruchomosci){
             
             nieruchomosci->setDomki();
@@ -206,7 +208,8 @@ class Bankier
     }
 };
 
-class Szansa
+
+class Szansa:public Pole
 {
     protected:
     int wartosc;
@@ -214,21 +217,46 @@ class Szansa
     int getWartosc(){
         int result = rand()%100+10;
         return result;
-    }
+    };
+      void virtual obslugaGracza(Gracz& gracz){
+            cout <<  "szansa"<<endl;
+            gracz.getImie();
+        };
 };
 
-class Ryzyko:protected Szansa
+class Ryzyko:public Pole
 {
+    protected:
+    int wartosc;
     public:
     int getWartosc()  {
         int result = rand()%100-100;
         return result;
     }
+        void virtual obslugaGracza(Gracz& gracz) override{
+            cout <<  "Ryzyko"<<endl;
+            gracz.getImie();
+
+        };
 };
 int main(){
  srand(time(NULL));
 
+Nieruchomosci pole1;
+pole1.setNazwa("Nieruchomosc");
+Szansa pole2;
+pole2.setNazwa("szansa");
+Ryzyko pole3;
+pole3.setNazwa("Ryzyko");
 
+Gracz Roman("Rome123k");
+vector<Pole> plansza;
+plansza.push_back(pole1);
+plansza.push_back(pole2);
+plansza.push_back(pole3);
 
+for(Pole& el:plansza){
+    cout << el.getNazwaPola()<<endl;
+}
  return 0;
 };
