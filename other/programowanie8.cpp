@@ -35,8 +35,8 @@ void addGrade(Course& course, int grade, string date, string instructor) {
 }
 
 // Funkcja do dodawania przedmiotu do semestru
-void addCourseToSemester(Student& student, int semester, Course& course) {
-    student.semesterCourses[semester].push_back(course);
+void addCourseToSemester(Student *student, int semester, Course *course) {
+    student->semesterCourses[semester].push_back(*course);
 }
 
 // Funkcja do wyświetlania ocen dla danego przedmiotu
@@ -67,7 +67,10 @@ void displayStudents(vector<Student>& studentsList){
     cout << setw(3) << "Id." << setw(10) << "Name" << setw(10) << "Semester" << setw(10) << "Story" << endl;
     cout << "====================================" << endl;
     for(Student el : studentsList){
-        cout << setw(3) << el.id << setw(10) << el.name << setw(10) << el.currentSemester << setw(10) << "" << endl;   
+        cout << setw(3) << el.id << setw(10) << el.name << setw(10) << el.currentSemester << setw(10);
+        if(el.semesterCourses.empty())cout << " No"<<endl;
+        else cout << " Yes"<<endl;
+
     }
 }
 void displaySemester(Student &student) {
@@ -91,7 +94,7 @@ void displayCoursesForSemester(const map<int, vector<Course>>& semesterCourses, 
    
    auto it = semesterCourses.find(semester);
    for (const Course& course : it->second) {
-            cout << "Course name: " << course.name << endl;
+
             displayGrades(course);
         }
 }
@@ -112,53 +115,64 @@ void semestralMenu(int &choice){
     cout <<"0.      Exit   "<<endl;
     cout << "Enter your choice: ";
     cin >> choice;
+    cout << endl;
    
 
 };
-Student selectedStudent(vector<Student>&studentsList, int id){
-    for(Student el : studentsList){
+Student& selectedStudent(vector<Student>&studentsList, int id){
+    for(Student &el : studentsList){
        if(el.id == id){
+        cout << el.name;
+        cout << el.semesterCourses.empty();
             return el;
+            
        } 
 }
 };
-void addNewCourse(Student &selectedStudent){
-    Course nowy;
+void addNewCourse(Student* selectedStudent) {
+    Course* nowy = new Course; // Tworzenie obiektu dynamicznego
     int semesterNumber;
-    cout << "Enter name: ";cin>>nowy.name;
-    cout << "Enter grade"; cin >> nowy.grade.grade;
-    cout << "Enter date"; cin >> nowy.grade.date;
-    cout << "Enter instructor"; cin >> nowy.grade.instructor;
-    cout << "Enter semester No : ";cin >> semesterNumber;
-     addCourseToSemester(selectedStudent, semesterNumber, nowy);
+    cout << "Enter name: "; cin >> nowy->name;
+    cout << "Enter grade"; cin >> nowy->grade.grade;
+    cout << "Enter date"; cin >> nowy->grade.date;
+    cout << "Enter instructor"; cin >> nowy->grade.instructor;
+    cout << "Enter semester No : "; cin >> semesterNumber;
+    addCourseToSemester(selectedStudent, semesterNumber, nowy); // Przekazanie adresu obiektu
+    cout << "After adding: Semester " << semesterNumber << " has " << selectedStudent->semesterCourses[semesterNumber].size() << " courses." << endl;
+    delete nowy; // Zwolnienie zaalokowanej pamięci
 }
-void semestralCase(int semestralChoice,Student &selectedStudent ){
-    switch(semestralChoice){
+
+
+void semestralCase(int semestralChoice, Student* selectedStudent) {
+    switch (semestralChoice) {
         case 1:
-        addNewCourse(selectedStudent);
-        break;
+            cout << selectedStudent->semesterCourses.empty();
+            addNewCourse(selectedStudent);
+            break;
         case 2:
-        system("cls");
-        int semester;
-        cout << "Which one semester? ";cin>>semester;
-        displayCoursesForSemester(selectedStudent.semesterCourses, semester);
-        break;
-    };
-};
+            system("cls");
+            int semester;
+            cout << "Which one semester? "; cin >> semester;
+            displayCoursesForSemester(selectedStudent->semesterCourses, semester);
+            break;
+    }
+}
 
 
-void semestralStudent(vector<Student>&studentsList ){
-    int studentId,choice;
+
+void semestralStudent(vector<Student>& studentsList) {
+    int studentId, choice;
     displayStudents(studentsList);
-    cout << "Enter student's id: ";cin>> studentId;
-    Student selected = selectedStudent(studentsList,studentId);
+    cout << "Enter student's id: ";
+    cin >> studentId;
     cout << endl;
-    do{
-    semestralMenu(choice);
-    semestralCase(choice, selected);
-    }while(choice!=0);
-   
-};
+    Student& selected = selectedStudent(studentsList, studentId); // Przekazanie referencji
+    cout << endl;
+    do {
+        semestralMenu(choice);
+        semestralCase(choice, &selected); // Przekazanie referencji
+    } while (choice != 0);
+}
 void addStudent(vector<Student> &studentsList){
     Student nowy;
     nowy.id = indexId;
@@ -177,8 +191,10 @@ void displayStudentsByKey(vector<Student>& studentsList){
     cout << "====================================" << endl;
     for(Student el : studentsList){
        if(el.name == Key){
-            cout << setw(3) << el.id << setw(10) << el.name << setw(10) << el.currentSemester << setw(10) << "" << endl; 
+            cout << setw(3) << el.id << setw(10) << el.name << setw(10) << el.currentSemester << setw(10);
+
             tag = false;
+            
        }   
     }
       if(tag == true)    cout << "          Empty array"<<endl;
@@ -214,32 +230,12 @@ void modifyStudent(vector <Student>&studentsList){
     if(tag == true)    cout << "Student with ID " << key << " not found." << endl;
 else cout << "Student with ID " << key << " has been removed." << endl;
 };
+ vector <Student> studentsList;
 int main() {
-    vector <Student> studentsList;
+   
     int choice;
     // Przykładowe użycie
-    Student student1 = {1, "John Doe", 3};
-    
-    Course math = {"Math", {}};
-addGrade(math, 4, "2024-05-30", "Prof. Smith");
-     addCourseToSemester(student1, 3, math);
-    Course Polish = {"Polish", {}};
-    Course ENG = {"ENG", {}};
-    
-    addGrade(ENG, 5, "2024-01-10", "Prof. Biernat");
-    addGrade(Polish, 4, "2024-12-30", "Prof. Bubu");
-   
-    addCourseToSemester(student1, 3, Polish);
-    addCourseToSemester(student1, 3, Polish);
-    addCourseToSemester(student1, 3, ENG);
 
-    Course physics = {"Physics", {}};
-    addGrade(physics, 5, "2024-06-01", "Prof. Johnson");
-    addGrade(physics, 4, "2024-06-05", "Prof. Johnson");
-    addCourseToSemester(student1, 3, physics);
-
-    // Wyświetlanie wszystkich kursów dla danego semestru
-    displayCoursesForSemester(student1.semesterCourses, 3);
 
     do{
         menu(choice);
