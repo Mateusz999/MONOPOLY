@@ -3,7 +3,10 @@
 #include <cstdlib> // dla funkcji srand
 #include <ctime>   // dla funkcji time
 using namespace std;
-
+class Gracz;
+class Pole;
+class Nieruchomosc;
+class Bankier;
 class Gracz
 {
     
@@ -12,7 +15,11 @@ class Gracz
         string imie;
         int pozycja;
     public:
-    Gracz(string I):  stan(1000),imie(I),pozycja(0){};
+    Gracz(string imie){
+        this->imie = imie;
+        this->pozycja =0;
+        this->stan = 1000;
+        };
         int rzutKostka(){
             int kostka_1 = rand()%6+1;
             int kostka_2 = rand()%6+1;
@@ -64,6 +71,7 @@ class Pole
         string nazwaPola;
         
     public: 
+
         string getNazwaPola(){
             return nazwaPola;
         };
@@ -79,14 +87,23 @@ class Pole
 class Nieruchomosci:public Pole
 {   
     private:
-        int domki = 3;
-        bool hotel=false;
-        string wlasciciel="dziala";
-        int oplata=100;
+        int domki;
+        bool hotel;
+        string wlasciciel;
+        int oplata;
         bool wykupione=false;
         int cena=100;
     public:
+        Nieruchomosci(string nazwaPola, int oplata, int cena ){
+            this->nazwaPola = nazwaPola;
+            this->domki = 0;
+            this->hotel = false;
+            this->wlasciciel ="";
+            this->oplata = oplata;
+            this->wykupione = false;
+            this->cena = cena;
 
+        };
         bool getWykupione(){
             return wykupione;
         };
@@ -155,7 +172,7 @@ class Nieruchomosci:public Pole
         (*gracz).setStanDown(getCena());
     }
         vector<Gracz>listaGraczy;
-        void virtual obslugaGracza(Gracz& gracz) override {
+        void virtual obslugaGracza(Gracz& gracz,Bankier Bank)  {
             Gracz* posiadacz;
             if(getWykupione()){
                 if(getWlasciciel() == gracz.getImie()){
@@ -165,9 +182,11 @@ class Nieruchomosci:public Pole
                     switch(choice){
                         case 1:
                             budujDomek(&gracz);
+                            Bank.dajDomek(&gracz,this);
                             break;
                         case 2:
                             budujHotel(&gracz);
+                            Bank.dajDomek(&gracz,this);
                             break;
                     };
                 }else{
@@ -214,6 +233,9 @@ class Szansa:public Pole
     protected:
     int wartosc;
     public:
+    Szansa(string x){
+        this->nazwaPola = x;
+    }
     int getWartosc(){
         int result = rand()%100+10;
         return result;
@@ -229,25 +251,68 @@ class Ryzyko:public Pole
     protected:
     int wartosc;
     public:
+    Ryzyko(string NazwaPola){
+        this->nazwaPola = nazwaPola;
+    }
     int getWartosc()  {
         int result = rand()%100-100;
         return result;
     }
-        void virtual obslugaGracza(Gracz& gracz) override{
+        void virtual obslugaGracza(Gracz& gracz) {
             cout <<  "Ryzyko"<<endl;
             gracz.getImie();
 
         };
 };
+
+class Kolej:public Pole{
+    protected:
+    int oplata;
+    string wlasciciel;
+    public:
+    void obsluzGracz(Gracz&gracz){
+        
+    }
+};
 int main(){
  srand(time(NULL));
+int choice;
+do{
+cout << "==================================================="<<endl;
+cout << "       Menadzer Planszy "<<endl;
+cout << "==================================================="<<endl;
+cout << "Nr     Opis"<<endl;
+cout << "1.     Dodaj Nieruchomosc"<<endl;
+cout << "2.     Dodaj Pole Szansa"<<endl;
+cout << "3.     Dodaj Pole Ryzyko"<<endl;
+cout << "4.     Dodaj Pole Kolej"<<endl;
+cout << "5.     Dodaj Pole Element infrastruktury"<<endl;
+cout << "0.     Wyjdz"<<endl;
+cout << "==================================================="<<endl;
+cout << "Podemij decyzji: ";cin >> choice;
+switch(choice){
+    case 1:
 
-Nieruchomosci pole1;
+        break;
+    case 2:
+
+        break;
+    case 3:
+
+        break;
+    case 4:
+
+        break;
+    case 5:
+
+        break;
+}
+}while(choice!=0);
+Nieruchomosci pole1("Nieruchomosc",100,100);
 pole1.setNazwa("Nieruchomosc");
-Szansa pole2;
-pole2.setNazwa("szansa");
-Ryzyko pole3;
-pole3.setNazwa("Ryzyko");
+Szansa pole2("Karta");
+Ryzyko pole3("Ryzyko");
+
 
 Gracz Roman("Rome123k");
 vector<Pole> plansza;
