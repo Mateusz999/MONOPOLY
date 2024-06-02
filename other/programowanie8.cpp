@@ -57,6 +57,7 @@ void menu(int &choice){
     cout <<"4.      Display students   "<<endl;
     cout <<"5.      Search student   "<<endl;
     cout <<"6.      Student semestral history   "<<endl;
+    cout <<"7.      Clear   "<<endl;
     cout <<"0.      Exit   "<<endl;
     cout << "Enter your choice: ";
     cin >> choice;
@@ -193,6 +194,7 @@ void semestralMenu(int &choice){
     cout <<"5.      Delete  selected semester   "<<endl;
     cout <<"6.      Delete  course  "<<endl;
     cout <<"7.      Modify course   "<<endl;
+    cout <<"8.      Clear   "<<endl;
     cout <<"0.      Exit   "<<endl;
     cout << "Enter your choice: ";
     cin >> choice;
@@ -224,7 +226,6 @@ void addNewCourse(Student* selectedStudent) {
 void semestralCase(int semestralChoice, Student* selectedStudent) {
     switch (semestralChoice) {
         case 1:
-            cout << selectedStudent->semesterCourses.empty();
             addNewCourse(selectedStudent);
             break;
         case 2:
@@ -248,6 +249,9 @@ void semestralCase(int semestralChoice, Student* selectedStudent) {
             break;
         case 7:
             editCourseFromSemester(selectedStudent);
+            break;
+        case 8: 
+            system("cls");
             break;
     }
 }
@@ -315,7 +319,9 @@ void modifyStudent(vector <Student>&studentsList){
     cout << "Enter student's id to modify: ";cin>>key;
         for (auto it = studentsList.begin(); it != studentsList.end(); ++it) {
         if (it->id == key) {
+            cout << "Enter new ID: ";cin>>it->studentID;
             cout << "Enter new name: ";cin>>it->name;
+            cout << "Enter new surname: ";cin>>it->surname;
             cout << "Enter new semester: ";cin>>it->currentSemester;
             tag = false;
         }
@@ -323,9 +329,30 @@ void modifyStudent(vector <Student>&studentsList){
     if(tag == true)    cout << "Student with ID " << key << " not found." << endl;
 else cout << "Student with ID " << key << " has been removed." << endl;
 };
+void fillStudentsWithData(vector<Student>& studentsList) {
+    for (int i = 0; i < 5; i++) { // Adding 5 students
+        Student nowy;
+        nowy.id = indexId++;
+        nowy.studentID = "ID" + to_string(nowy.id);
+        nowy.name = "Name" + to_string(nowy.id);
+        nowy.surname = "Surname" + to_string(nowy.id);
+        nowy.currentSemester = rand()%5;
+
+        for (int sem = 1; sem <= nowy.currentSemester; sem++) { // Adding 3 semesters
+            for (int courseNum = 1; courseNum <= 5; courseNum++) { // Adding 3 courses per semester
+                Course course;
+                course.name = "Course" + to_string(courseNum);
+                addGrade(course, 5, "2023-01-01", "Instructor" + to_string(courseNum));
+                addCourseToSemester(&nowy, sem, &course);
+            }
+        }
+
+        studentsList.push_back(nowy);
+    }
+}
  vector <Student> studentsList;
 int main() {
-   
+   fillStudentsWithData(studentsList);
     int choice;
 
     do{
@@ -350,6 +377,8 @@ int main() {
         case 6:
             semestralStudent(studentsList);
             break;
+        case 7:
+            system("cls");
         }
     }while(choice!=0);
     return 0;
