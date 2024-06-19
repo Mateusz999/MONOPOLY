@@ -1,5 +1,5 @@
 #include <iostream>
-
+#include<fstream>
 using namespace std;
 
 struct osoba{
@@ -140,7 +140,7 @@ void deleteOne(osoba **pocz, osoba**kon){
         temp = temp->next;
     };
 };
-
+l
 void deleteAll(osoba**pocz, osoba**kon){
         osoba*temp = *pocz;
     while((temp)!=NULL){
@@ -208,6 +208,28 @@ void displayNew(osoba *pocz){
         pocz = pocz->next;
     };
     }}
+
+void saveFile(osoba* pocz){
+    ofstream plik;
+    plik.open("DANE.txt");
+    if(pocz == NULL) cout<<"brak listy";
+    else{
+        if(plik.is_open()){
+            while(pocz!=NULL){
+                plik << "IMiE" << pocz->imie<<endl;
+                pocz = pocz->next;
+            }
+            plik.close();
+        }else cout << "nie udalo sie otworzyc pliku";
+    }
+};
+void wyswietl(){
+    ifstream plik("DANE.txt");
+    string line;
+    while(getline(plik,line)){
+        cout << line << endl;
+    }
+}
 int main(){
 int choice;
 do{
@@ -229,6 +251,12 @@ switch(choice){
     break;
     case 5:
     deleteAll(&pocz,&kon);
+    break;
+    case 6:
+    saveFile(pocz);
+    break;
+    case 7:
+    wyswietl();
     break;
 }
 }while(choice!=0);
